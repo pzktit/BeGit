@@ -1,0 +1,30 @@
+#!/bin/bash
+
+mkdir -p repo1
+cd repo1
+
+touch main.cc sub.cc sub.h # pliki biorące udział w zabawie
+git init # incjowanie repozytorium
+git add main.cc sub.cc sub.h # zaznaczenie plików do synchronizacji
+git commit -a -m "Project initialization" # pierwsza migawka
+git log
+git branch test # powstaje nowa gałąź, ale jesteśmy w master
+git branch
+echo "A\nB\n" > main.cc 
+git commit -a -m "added A to main.cc" # modyfikacja i wykonanie migawki
+git checkout test # przejście do gałęzi test
+cat main.cc
+echo "a" > main.cc 
+echo "c" > sub.cc
+git commit -a -m "added 'ab' to main.cc" # edycja plików i stworzenie migawki
+git log
+git checkout master # powrót do gałęzi głównej
+git merge test # próba włączenia, mamy konflikt
+cat main.cc
+cat sub.cc # tu się udało
+mcedit main.cc
+git commit -a -m "conflicts resolved" # usunięcie konfliktu
+git merge test # włączenie test do master
+cat main.cc
+
+cd ..

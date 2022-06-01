@@ -1,0 +1,222 @@
+\documentclass[tikz,10pt]{standalone}
+% \input{styles}
+% \begin{document}
+% \begin{tikzpicture}[node distance=2cm]
+%   \node (start) [startstop] {Start};
+%   \node (in1) [commit, below of=start] {Project initialization};
+%   \node (pro1) [process, below of=in1] {Process 1};
+%   \node (branch) [left of=pro1] {};
+%   \draw [arrow] (in1) -| (branch);
+%   \node (dec1) [decision, below of=pro1, yshift=-0.5cm] {Decision 1};
+%   \node (pro2a) [process, below of=dec1, yshift=-0.5cm, text width=10em] {Process 2a  xlxlx asdwe akaka ssss};
+%   \node (pro2b) [process, right of=dec1, xshift=2cm] {Process 2b};
+%   \node (out1) [io, below of=pro2a] {Output};
+%   \node (stop) [startstop, below of=out1] {Stop};
+%   \draw [arrow] (start) -- (in1);
+%   \draw [arrow] (in1) -- (pro1);
+%   \draw [arrow] (pro1) -- (dec1);
+%   \draw [arrow] (dec1) -- (pro2a);
+%   \draw [arrow] (dec1) -- (pro2b);
+%   \draw [arrow] (dec1) -- node[anchor=east] {yes} (pro2a);
+%   \draw [arrow] (dec1) -- node[anchor=south] {no} (pro2b);
+%   \draw [arrow] (pro2b) |- (pro1);
+%   \draw [arrow] (pro2a) -- (out1);
+%   \draw [arrow] (out1) -- (stop);
+% \end{tikzpicture}
+% \end{document}
+
+\usetikzlibrary{arrows.meta, automata,calc,positioning,quotes}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%% inicjalizacja projektu
+\begin{tikzpicture}[>=Stealth, auto,
+      node distance = 2*\dis, on grid,
+      every state/.style = {circle, draw=blue, very thick, 
+                      text width=6em, text centered, minimum size=2em, inner sep=0pt},
+      every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+      every edge quotes/.style = {sloped, font=\small}
+      ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) [draw=none]               {};
+  \node   (s)  [draw=green, above=of n1] {Project initialization};
+  \node   (n3) [draw=none,right=of n1]  {};
+\end{scope}
+\path %
+  (s)  edge ["{\color{green}master}"]    (n1) ;
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% utworzenie gałęzi
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) [draw=none]               {};
+  \node   (s)  [draw=green, above=of n1] {Project initialization};
+  \node   (n3) [draw=none,right=of n1]  {};
+\end{scope}
+\path %
+  (s)  edge ["{\color{green}master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3);
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% pierwszy kommit na master
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) [draw=green]               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [draw=none,right=of n1]  {};
+\end{scope}
+\path %
+  (s)  edge ["{\color{green}master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3);
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% git checkout test
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) []               {added A to main.cc};
+  \node   (s)  [draw=green,above=of n1] {Project initialization};
+  \node   (n3) [draw=none,right=of n1]  {};
+\end{scope}
+\path %
+  (s)  edge ["{master}"]    (n1) 
+  (s)  edge ["{\color{green}test}"]    (n3);
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%% kommit na test
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) []               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [draw=green,right=of n1]  {added 'ab' to main.cc};
+\end{scope}
+\path %
+  (s)  edge ["{master}"]    (n1) 
+  (s)  edge ["{\color{green}test}"]    (n3);
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% przejście na gałąź master
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) [draw=green]               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [right=of n1]  {added 'ab' to main.cc};
+\end{scope}
+\path %
+  (s)  edge ["{\color{green}master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3);
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% pierwszy merge
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) [draw=green]               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [right=of n1]  {added 'ab' to main.cc};
+\end{scope}
+\path %
+  (s)  edge ["{\color{green}master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3)
+  (n3) edge ["{merge conflict}"]    (n1) ;
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% drugi commit na master
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) []               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [right=of n1]  {added 'ab' to main.cc};
+  \node   (n2) [draw=green,below=of n1]  {conflicts resolved};
+\end{scope}
+\path %
+  (s)  edge ["{master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3)
+  (n3) edge ["{merge conflict}"]    (n1) 
+  (n1) edge ["\color{green}{main.cc correction}"]    (n2) ;
+\end{tikzpicture}
+
+%%%%%%%%%%%%%%%%%%%%%%% drugi merge
+
+\begin{tikzpicture}[>=Stealth, auto,
+  node distance = 2*\dis, on grid,
+  every state/.style = {circle, draw=red, very thick, 
+                  text width=6em, text centered, minimum size=2em, inner sep=0pt},
+  every edge/.style = {draw, thick, -Stealth, shorten >=1pt},
+  every edge quotes/.style = {sloped, font=\small}
+  ]
+\def\dis{3cm}
+\begin{scope}[nodes=state]
+  \node   (n1) []               {added A to main.cc};
+  \node   (s)  [above=of n1] {Project initialization};
+  \node   (n3) [right=of n1]  {added 'ab' to main.cc};
+  \node   (n2) [draw=green,below=of n1]  {conflicts resolved};
+\end{scope}
+\path %
+  (s)  edge ["{master}"]    (n1) 
+  (s)  edge ["{test}"]    (n3)
+  (n3) edge ["{merge conflict}"]    (n1) 
+  (n1) edge ["\color{green}{main.cc correction}"]    (n2) 
+  (n3) edge [near start,"{merge success}"] (n2) ;
+\end{tikzpicture}
+
+
+
+\end{document}
